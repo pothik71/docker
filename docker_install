@@ -26,3 +26,39 @@ or
 yum install --allowerasing docker-ce --nobest
 
 sudo yum install docker-ce docker-ce-cli containerd.io
+
+
+To install a specific version of Docker Engine, list the available versions in the repo, then select and install:
+
+$ yum list docker-ce --showduplicates | sort -r
+
+docker-ce.x86_64  3:18.09.1-3.el7                     docker-ce-stable
+docker-ce.x86_64  3:18.09.0-3.el7                     docker-ce-stable
+docker-ce.x86_64  18.06.1.ce-3.el7                    docker-ce-stable
+docker-ce.x86_64  18.06.0.ce-3.el7                    docker-ce-stable
+
+$ sudo yum install docker-ce-<VERSION_STRING> docker-ce-cli-<VERSION_STRING> containerd.io
+
+
+UPGRADE DOCKER ENGINE
+
+yum -y upgrade instead of yum -y install, and pointing to the new file.
+
+
+If you would like to use Docker as a non-root user, you should now consider adding your user to the “docker” group with something like:
+
+$ sudo usermod -aG docker <your-user>
+
+
+Uninstall Docker Engine
+
+Uninstall the Docker Engine, CLI, and Containerd packages:
+
+$ sudo yum remove docker-ce docker-ce-cli containerd.io
+
+Images, containers, volumes, or customized configuration files on your host are not automatically removed. To delete all images, containers, and volumes:
+
+$ sudo rm -rf /var/lib/docker
+
+
+
