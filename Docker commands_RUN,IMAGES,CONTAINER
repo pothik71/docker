@@ -1,0 +1,42 @@
+Docker Images:
+
+# docker images  [check all images]
+
+# docker pull image_name  [to pull images]
+
+# docker rmi image_name   [ to remove image]
+
+
+Docker RUN :
+
+# docker run image_name  [to run a container of latest image version]
+
+# docker run image_name:tag 	[to run a container with specific version]
+
+# docker run -it centos bash  [ to run image and go to the bash of that image] [ -i is for interactive mode and -t for terminal ]
+
+# docker run -d image_name  [ run a container in detached mood]
+
+# docker run --name webapp nginx:1.14-alpine      [ run a container with a name webapp using the image nginx:1.14-alpine ]
+
+# docker run -p 80:5000 webapp    [ 80 is mapped port. 5000 is default port . out side container will access through 80 port]
+
+# docker run -v /opt/databack:/var/lib/mysql mysql [ Volume mapping : mapped a external volume /opt/databack to container volume /var/lib/mysql] [ if we delete container then data will not lost]
+
+
+
+Docker container:
+
+# docker ps    [check running container]
+
+# docker ps -a   [ check all container]
+
+# docker inspect container-id-or-name  [ detail information in json format ]
+
+# docker stop container-id-or-name    [ to stop a container]
+
+# docker rm container-id-or-name   [to remove a container]
+
+# docker exec container-id-or-name cat /etc/*release*   [execute a command into the container]
+
+# docker logs container-id-or-name   [to read log of a container]
