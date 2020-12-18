@@ -17,6 +17,8 @@ Docker RUN :
 
 # docker run -it centos bash  [ to run image and go to the bash of that image] [ -i is for interactive mode and -t for terminal ]
 
+# docker run python cat /etc/*release*   [ to check the os version of the image ]
+
 # docker run -d image_name  [ run a container in detached mood or background]
 
 # docker attach container-id-or-name [ to attach a container again from detached mode]
