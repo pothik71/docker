@@ -13,9 +13,13 @@ Docker RUN :
 
 # docker run image_name:tag 	[to run a container with specific version]
 
+# docker run image_name sleep 50 [ run a image for 50 seconds ]
+
 # docker run -it centos bash  [ to run image and go to the bash of that image] [ -i is for interactive mode and -t for terminal ]
 
-# docker run -d image_name  [ run a container in detached mood]
+# docker run -d image_name  [ run a container in detached mood or background]
+
+# docker attach container-id-or-name [ to attach a container again from detached mode]
 
 # docker run --name webapp nginx:1.14-alpine      [ run a container with a name webapp using the image nginx:1.14-alpine ]
 
