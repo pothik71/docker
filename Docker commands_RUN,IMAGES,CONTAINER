@@ -29,7 +29,15 @@ Docker RUN :
 
 # docker run -v /opt/databack:/var/lib/mysql mysql [ Volume mapping : mapped a external volume /opt/databack to container volume /var/lib/mysql] [ if we delete container then data will not lost]
 
+# docker run -e APP_COLOR=blue simple-webapp-color [ e= environment variable, to check it- inspect the image and see environment variable is set or not ]
 
+Q-1 Run a container named blue-app using image kodekloud/simple-webapp and set the environment variable APP_COLOR to blue. Make the application available on port 38282 on the host. The application listens on port 8080.
+
+# docker run --name blue-app -p 38282:8080 -e APP_COLOR=blue kodekloud/simple-webapp 
+
+Q-2 Deploy a mysql database using the mysql image and name it mysql-db. Set the database password to use db_pass123. Lookup the mysql image on Docker Hub and identify the correct environment variable to use for setting the root password. Name: mysql-db , Image: mysql, Env: MYSQL_ROOT_PASSWORD=db_pass123
+
+# docker run --name mysql-db -e MYSQL_ROOT_PASSWORD=db_pass123 -d mysql
 
 Docker container:
 
