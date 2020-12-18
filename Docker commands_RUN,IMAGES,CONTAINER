@@ -19,7 +19,7 @@ Docker RUN :
 
 # docker run --name webapp nginx:1.14-alpine      [ run a container with a name webapp using the image nginx:1.14-alpine ]
 
-# docker run -p 80:5000 webapp    [ 80 is mapped port. 5000 is default port . out side container will access through 80 port]
+# docker run -p 80:5000 webapp    [ PORT mapping: 80 is mapped port. 5000 is default port . out side container will access through 80 port]
 
 # docker run -v /opt/databack:/var/lib/mysql mysql [ Volume mapping : mapped a external volume /opt/databack to container volume /var/lib/mysql] [ if we delete container then data will not lost]
 
