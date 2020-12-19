@@ -16,10 +16,8 @@ if you are unsure, check the hints section for the exact commands.
 
 # docker run --name wordpress -p 8085:80 --link db:db -d wordpress
 
-Create a docker-compose.yml file under the path /root/wordpress. Once done, run a docker-compose up.
 
-
-The compose file should have exact specification of the wordpress and db container
+Create a docker-compose.yml file under the path /root/wordpress. Once done, run a docker-compose up. The compose file should have exact specification of the wordpress and db container
 
 
 services:
