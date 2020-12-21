@@ -1,3 +1,5 @@
+Volume mapping is necessary to store data of your application though deleted the container.
+
 
 Volume mount:
 -------------
@@ -27,7 +29,7 @@ docker run \
 
 
 Storage drivers used by docker:
-
+-------------------------------
 - AUFS  --used by ubuntu
 - ZFS
 - BTRFS
