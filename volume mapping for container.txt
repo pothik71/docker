@@ -1,0 +1,36 @@
+
+Volume mount:
+-------------
+
+Case 1: Creating a volume on host and mount it to container:
+
+docker volume create data_volume   [Path: /var/lib/docker/volume/data_volume]
+
+docker run -v data_volume:/var/lib/mysql mysql  [mount a storage to default storage]
+
+
+Case 2: If we simply run the following command docker will create that volume automatically at /var/lib/docker/volume/data_volume2.
+
+docker run -v data_volume2:/var/lib/mysql mysql
+
+
+Bind mount:
+-----------
+Case 3: Run a container using external volume of the host path /data/mysql:
+
+docker run -v /data/mysql:/var/lib/mysql mysql
+
+Modern way:
+
+docker run \
+--mount type=bind,source=/data/mysql,target=/var/lib/mysql mysql
+
+
+Storage drivers used by docker:
+
+- AUFS  --used by ubuntu
+- ZFS
+- BTRFS
+- DEVICE MAPPER  -- debian, centos
+- OVERLAY
+- OVERLAY2
