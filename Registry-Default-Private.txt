@@ -1,0 +1,39 @@
+Docker Registry (default: docker.io):
+================
+docker run nginx
+image: nginx/nginx
+		1st nginx: User/Accountrepository
+		2nd nginx: Image name
+
+
+To run a container from private registry:
+=========================================
+
+# docker login private-registry.io [ login before push, pull images]
+
+
+# docker run private-registry.io/apps/internal-app
+
+Deploy a Private Registry:
+==========================
+
+# docker run -d -p 5000:5000 --name registry registry:2   [Default from 5000]
+
+# docker image tag my-image localhost:5000/my-image
+
+# docker push localhost:5000/my-image
+
+Google registry:
+================
+gcr.io (kubernetes related images)
+
+
+# docker pull localhost:5000/my-image
+
+# docker pull 192.168.56.100:5000/my-image
+
+
+
+
+
+

@@ -1,0 +1,127 @@
+Docker SWARM:
+============
+
+Manage Multiple host by making a cluster to HA and also load balancing.
+
+
+Swarm Manager 	Worker 	Worker 	Worker
+
+# Creating swarm manager:
+===========================
+
+# docker swarm init --advertise-addr 192.168.1.12
+
+# Creating Slave/Worker:
+========================
+
+# docker swarm join --token <token>
+
+==================================
+
+In docker swarm, every host is knows as node.
+
+Function of Manager node:
+=========================
+1. Maintain the cluster state
+2. manage workers
+3. Multiple Manager Nodes is required in a single cluster for HA.
+
+=================================
+
+Multiple Manager Nodes:
+=======================
+# To avoid the conflict only one manage make the decision which called the leader.
+# leader do not make a decision by own. decision of majority is granted.
+# RAFT consensus algorithm is used for this purpose.
+# Every Manager has own DB for RAFT information
+# To make a decision, Managers create a qorum. If there are 5 Managers, Minimum 3 will required to make a qorum.
+# Docker recommends no more than 7 Managers.
+# When quorum failed such as 2 of 3 Managers are failed then quorum will fail. In this situation it is required to live those 2 failed manages or at least on to live the quorum or otherwise force to create a new cluster with one manager. command-
+## docker swarm init --force-new-cluster
+
+=======================
+Practice or Demo
+===================
+Purposes:
+
+	1. Create swarm cluster
+	2. Add worker nodes
+	3. Add Manager nodes
+	4. Quorum
+	5. Node Failures
+	
+=====================
+Create a swarm/cluster as master:
+# docker swarm init --advertise-addr 192.168.1.11
+
+# docker swarm join-token worker 		[to create a token for worker]
+# docker swarm join-token manager		[to create a token for manager]
+
+It will generate a token to join this cluster as:
+
+# docker swarm join --token SWMTKN-1-2x3t33pse7hmtcsdfv4kufi7hq2j5zu1jjguqadcewooqoer1j-5m9v59znd8aky40o92vlrwkkw 192.168.1.11:2377
+
+[Also allow the port in firewall such as follows:
+
+Step-01: firewall-cmd --zone=public --permanent --add-port 2377/tcp
+step-02: firewall-cmd --reload
+step-03: firewall-cmd --list-all    
+]
+
+
+Run this command to another host to join in the cluster as a worker.
+===================
+To check all nodes in the cluster:
+
+# docker node ls
+
+
+====================
+To join cluster as a worker just go to the targeted host and run below command:
+
+# docker swarm join --token SWMTKN-1-2x3t33pse7hmtcsdfv4kufi7hq2j5zu1jjguqadcewooqoer1j-5m9v59znd8aky40o92vlrwkkw 192.168.1.11:2377
+
+==========================
+To leave the cluster:
+
+# docker swarm leave
+
+==========================
+To remove a node from cluster:
+
+# docker node rm qcawsrpgmu6wp8enc68cteoww(ID or Name)
+
+======================================
+To join a cluster as Master node:
+
+Step 01: Create a token from cluster creator for master/manager node:
+		
+		# docker swarm join-token manager
+		
+	It will generate a token for master as followins:
+		# docker swarm join --token SWMTKN-1-2x3t33pse7hmtcsdfv4kufi7hq2j5zu1jjguqadcewooqoer1j-2antf3n1po83wjbtuitn6y95i 192.168.1.11:2377
+		
+Step 02: Run the following command no new host to join the cluster as Manager:
+
+		# docker swarm join --token SWMTKN-1-2x3t33pse7hmtcsdfv4kufi7hq2j5zu1jjguqadcewooqoer1j-2antf3n1po83wjbtuitn6y95i 192.168.1.11:2377
+		
+Step 03: All swarm manager must have allow following ports in firewall to join a cluster:
+
+		# firewall-cmd --zone=public --permanent --add-port 2377/tcp
+		# firewall-cmd --zone=public --permanent --add-port 7946/tcp
+		# firewall-cmd --zone=public --permanent --add-port 7946/udp
+		# firewall-cmd --zone=public --permanent --add-port 4789/udp
+		# firewall-cmd --reload
+		# firewall-cmd --list-all
+		
+
+For more about docker swarm firewall ports need to be enabled:
+
+https://www.bretfisher.com/docker-swarm-firewall-ports/
+
+Step 04: If 2 of 3 Manager node become down in the cluster then the running manager will not be functional. If cluster failed then service will run but manegerial work such as add a new worker or service will be stopped. We have to bring another manager back or forcely create a new cluster of single manager as:
+
+		# docker swarm init --force-new-cluster --advertise-addr 192.168.1.11
+
+
+

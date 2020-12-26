@@ -1,24 +1,147 @@
-Docker compose
+Docker Compose:
 
-First create a postgress database container called db, image postgres, environmental variable POSTGRES_PASSWORD=mysecretpassword
+To run an application stack:
 
+File name: docker-compose.yml
 
-if you are unsure, check the hints section for the exact commands.
+### Voting application stack:
 
-# docker run --name db -e POSTGRES_PASSWORD=mysecretpassword -d postgres
-
-
-Next let's create a simple wordpress container called wordpress, image: wordpress, link it to the container db and expose it on host port 8085
-
-
-if you are unsure, check the hints section for the exact commands.
-
-
-# docker run --name wordpress -p 8085:80 --link db:db -d wordpress
+docker run -d --name=redis
+docker run -d --name=db postgres:9.4
+docker run -d --name=vote -p 5000:80 --link redis:redis voting-app
+docker run -d --name=result -p 5001:80 --link db:db result-app
+docker run -d --name=worker --link db:db --link redis:redis worker
 
 
-Create a docker-compose.yml file under the path /root/wordpress. Once done, run a docker-compose up. The compose file should have exact specification of the wordpress and db container
+### Now create a docker-compose file using these procedure:
 
+docker-compose.yml
+==================
+
+redis:
+	image: redis
+
+db:
+	image: postgres:9.4
+vote:
+	build: ./vote
+	image: voting-app
+	ports:
+		- 5000:80
+	links:
+		- redis
+result
+	build: ./result
+	image: result-app
+	ports:
+		- 5001:80
+	links:
+		- db
+worker
+	build: ./worker
+	image: worker
+	links:
+		- redis
+		- db
+
+================================
+
+To run the 
+# docker-compose up
+
+
+===================================
+Docker compose version:
+
+
+Version 1:
+==============
+redis:
+	image: redis
+
+db:
+	image: postgres:9.4
+vote:
+	image: voting-app
+	ports:
+		- 5000:80
+	links:
+		- redis
+
+
+===========
+Version 2:
+===========
+version: 2
+services:
+	redis:
+		image: redis
+
+	db:
+		image: postgres:9.4
+	vote:
+		image: voting-app
+		ports:
+			- 5000:80
+		depends_on:
+			- redis
+
+[N.B. depends_on is used instead of links. Prior image will run first. In this case, redis. version should be specified]
+
+===============
+Version 3:
+===============
+version: 3
+services:
+	redis:
+		image: redis
+	db:
+		image: postgres:9.4
+	vote:
+		image: voting-app
+		ports:
+			- 5000:80
+			
+[N.B. Supports docker swarm.]
+
+=========
+Networks:
+=========
+
+version: 2
+services:
+	redis:
+		image: redis
+		networks:
+			- back-end
+
+	db:
+		image: postgres:9.4
+		networks:
+			- back-end
+	vote:
+		image: voting-app
+		ports:
+			- 5000:80
+		depends_on:
+			- redis
+		networks:
+			- front-end
+			- back-end
+	result:
+		image: result
+		networks:
+			- front-end
+			- back-end
+
+networks:
+	front-end:
+	back-end:
+	
+==============================
+Create a docker-compose.yml file under the path /root/wordpress. Once done, run a docker-compose up.
+Service Name: wordpress, Image: wordpress. Service Name:db, Image:postgres.
+========================
 
 services:
   db:
@@ -32,3 +155,35 @@ services:
     ports:
     - 8085:80
 version: '3.0'
+==============
+# docker-compose up
+===================
+
+Create a docker-compose.yml file under the path /root/jenkins. Once done, run a docker-compose up. Name: jenkins Image: jenkins/jenkins:lts ports: hostport: 8089 --> Container Port: 8080 hostport: 50000 --> Container Port: 50000
+Volume jenkins_home mapped to directory /var/jenkins_home
+
+===================
+
+services:
+  jenkins:
+    image: jenkins/jenkins:lts
+    ports:
+      - 8089:8080
+      - 50000:50000
+    volumes:
+      - jenkins_home:/var/jenkins_home
+volumes:
+  jenkins_home:
+version: '3.0'
+
+=======================
+# docker-compose up
+=========================
+
+
+
+
+
+
+
+	
