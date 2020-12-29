@@ -1,0 +1,161 @@
+Docker STACK:
+=============
+docker stack is same as docker compose. docker compose is used to run a application stack within same host where docker stack run a application stack in docker swarm that is various host.
+
+
+Docker Compose
+	
+# docker run mmumshad/simple-webapp
+# docker run mongodb
+# docker run redis:alpine
+# docker run ansible
+
+Docker Stack
+
+# docker service create mmumshad/simple-webapp
+# docker service create mongodb
+# docker service create redis:alpine
+# docker service create ansible 
+
+
+File name: docker-compose.yml : For docker compose:
+===================================================
+
+services:
+	web:
+		image: "mmumshad/simple-webapp"
+	database:
+		image: "mongodb"
+	messaging:
+		image: "redis:alpine"
+	orchestration:
+		image: "ansible" 
+
+
+
+File name: docker-compose.yml: For docker stack:
+================================================
+
+version: 3
+services:
+	web:
+		image: "mmumshad/simple-webapp"
+	database:
+		image: "mongodb"
+	messaging:
+		image: "redis:alpine"
+	orchestration:
+		image: "ansible"
+
+Command:
+===========
+# docker-compose up	
+
+Command:
+============
+# docker stack deploy
+
+
+Stack definition -Replica:
+==========================
+version: 3
+services:
+	redis:
+		image: redis
+		deploy:
+			replicas: 1
+			resources:
+				limits:
+					cpus: 0.01
+					memory: 50M
+	db:
+		image: postgres:9.4
+		deploy:
+			placement:
+				constraints:
+					- node.hostname == node1
+					- node.role == manager
+			replicas: 1
+	vote:
+		image: voting-app
+		deploy:
+			replicas: 2
+	result:
+		image: result
+		deploy:
+			replicas: 1
+			
+	worker:
+		image: worker
+		deploy:
+			replicas: 1
+
+
+
+DEMO:
+========
+
+docker-stack.yml
+
+
+version: '3'
+services:
+ redis:
+  image: redis
+ db:
+  image: postgres:9.4
+ vote:
+  image: dockersamples/examplevotingapp_vote
+  ports:
+   - 5000:80
+ worker:
+  image: dockersamples/examplevotingapp_worker
+ result:
+  image: dockersamples/examplevotingapp_result
+  ports:
+   - 5001:80
+	
+# docker stack deploy voting-app-stack --compose-file docker-stack.yml
+
+
+==============================================================
+
+docker-stack.yml
+
+
+version: '3'
+services:
+ redis:
+  image: redis
+ db:
+  image: postgres:9.4
+ vote:
+  image: dockersamples/examplevotingapp_vote
+  ports:
+   - 5000:80
+  deply:
+   replicas: 2
+ worker:
+  image: dockersamples/examplevotingapp_worker
+ result:
+  image: dockersamples/examplevotingapp_result
+  ports:
+   - 5001:80
+	
+# docker stack deploy voting-app-stack --compose-file docker-stack.yml
+
+# dockersamples/visualizer (Monitoring image like Portainer)
+============================================================
+To run:
+
+$ docker run -it -d -p 8080:8080 -v /var/run/docker.sock:/var/run/docker.sock dockersamples/visualizer
+
+If port 8080 is already in use on your host, you can specify e.g. -p [YOURPORT]:8080 instead. Example:
+
+$ docker run -it -d -p 5000:8080 -v /var/run/docker.sock:/var/run/docker.sock dockersamples/visualizer
+
+To run with a different context root (useful when running behind an external load balancer):
+
+$ docker run -it -d -e CTX_ROOT=/visualizer -v /var/run/docker.sock:/var/run/docker.sock dockersamples/visualizer
+
+
